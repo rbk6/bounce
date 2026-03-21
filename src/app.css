@@ -1,0 +1,51 @@
+/* src/app.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root {
+  /* colors */
+  --color-bg: #070b14;
+  --color-bg-raised: #0d1526;
+  --color-border: #1a2a4a;
+
+  --color-primary: #00e5ff;
+  --color-secondary: #0097a7;
+  --color-accent: #64ffda;
+
+  --color-text: #cde8f0;
+  --color-text-dim: #4a7a8a;
+
+  --color-success: #00e676;
+  --color-danger: #ff1744;
+
+  /* typography */
+  --font-main: 'Press Start 2P', monospace;
+
+  /* spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 32px;
+  --space-5: 64px;
+
+  /* border */
+  --radius: 2px;
+}
+
+/* reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-main);
+  font-size: 12px;
+}
