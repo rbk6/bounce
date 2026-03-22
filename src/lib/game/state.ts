@@ -20,7 +20,13 @@ export interface State {
 }
 
 export const initialState: State = {
-  players: [],
+  players: [0, 1].map((tileGroup) => ({
+    id: crypto.randomUUID(),
+    speed: 1,
+    ready: false,
+    currentTile: tileGroup,
+    tileGroup: tileGroup as 0 | 1,
+  })),
   balls: [],
   ballSpeed: 0.01, // progress per frame
 };

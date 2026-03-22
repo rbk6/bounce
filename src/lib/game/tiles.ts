@@ -27,19 +27,19 @@ export const createTileInstances = (
   const quads: QuadInstance[] = [];
 
   for (let i = 0; i < TILE_COUNT; i++) {
-    const instance = createQuadInstance(
-      gpu,
-      pipeline,
-      buildUniformData({
-        x: tileX(i),
-        y: TILE_Y,
-        width: TILE_WIDTH,
-        height: TILE_HEIGHT,
-        color: i % 2 === 0 ? TILE_A_COLOR : TILE_B_COLOR,
-      }),
+    quads.push(
+      createQuadInstance(
+        gpu,
+        pipeline,
+        buildUniformData({
+          x: tileX(i),
+          y: TILE_Y,
+          width: TILE_WIDTH,
+          height: TILE_HEIGHT,
+          color: i % 2 === 0 ? TILE_A_COLOR : TILE_B_COLOR,
+        }),
+      ),
     );
-
-    quads.push(instance);
   }
 
   return quads;
