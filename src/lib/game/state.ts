@@ -1,8 +1,9 @@
 export interface Player {
   readonly id: string;
-  tile: number;
   speed: number;
   ready: boolean;
+  currentTile: number;
+  tileGroup: 0 | 1;
 }
 
 export interface Ball {

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import GameCanvas from "../components/GameCanvas.svelte";
+  import GameCanvas from '../components/GameCanvas.svelte';
 </script>
 
 <main>
@@ -21,6 +21,6 @@
     color: var(--color-primary);
     font-size: 1.5rem;
     letter-spacing: 0.1em;
-    text-shadow: 0 0 20px var(--color-primary);
+    text-shadow: 0 0 4px var(--color-primary);
   }
 </style>

@@ -1,3 +1,4 @@
+import { CANVAS_HEIGHT, CANVAS_WIDTH } from '$lib/game/config';
 import type { GPUContext } from './context';
 import shaderCode from './shaders/quad.wgsl?raw';
 
@@ -39,15 +40,13 @@ export const setupBuffer = (
 
 export const buildUniformData = (
   params: QuadParams,
-  canvasWidth: number,
-  canvasHeight: number,
 ): Float32Array<ArrayBuffer> => {
   const { x, y, width, height, color = [0.0, 0.9, 1.0, 1.0] } = params;
 
-  const sx = width / canvasWidth;
-  const sy = height / canvasHeight;
-  const tx = (x / canvasWidth) * 2 - 1;
-  const ty = -((y / canvasHeight) * 2 - 1);
+  const sx = width / CANVAS_WIDTH;
+  const sy = height / CANVAS_HEIGHT;
+  const tx = (x / CANVAS_WIDTH) * 2 - 1;
+  const ty = -((y / CANVAS_HEIGHT) * 2 - 1);
 
   const data = new Float32Array(new ArrayBuffer(80));
   data.set([sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, 1, 0, tx, ty, 0, 1]);
