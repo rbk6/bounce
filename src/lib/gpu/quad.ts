@@ -2,14 +2,14 @@ import type { GPUContext } from './context';
 import shaderCode from './shaders/quad.wgsl?raw';
 
 export interface QuadPipeline {
-  pipeline: GPURenderPipeline;
-  vertexBuffer: GPUBuffer;
-  indexBuffer: GPUBuffer;
+  readonly pipeline: GPURenderPipeline;
+  readonly vertexBuffer: GPUBuffer;
+  readonly indexBuffer: GPUBuffer;
 }
 
 export interface QuadInstance {
-  uniformBuffer: GPUBuffer;
-  bindGroup: GPUBindGroup;
+  readonly uniformBuffer: GPUBuffer;
+  readonly bindGroup: GPUBindGroup;
 }
 
 export interface QuadParams {
