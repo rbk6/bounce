@@ -3,6 +3,7 @@
   import { initGPU, type GPUContext } from '$lib/gpu/context';
   import {
     buildUniformData,
+    createQuadInstance,
     createQuadPipeline,
     renderQuad,
   } from '$lib/gpu/quad';
@@ -19,35 +20,38 @@
       const gpu: GPUContext | null = await initGPU(canvas);
       if (!gpu) return; // TODO: error state for unsupported browsers
 
-      const uniformData = buildUniformData(
-        {
-          x: x,
-          y: 200,
-          width: 100,
-          height: 50,
-        },
-        canvasWidth,
-        canvasHeight,
+      const pipeline = createQuadPipeline(gpu);
+
+      const quadParams = [
+        { x: 50, y: 200, width: 100, height: 50 },
+        { x: 200, y: 500, width: 100, height: 50 },
+        { x: 500, y: 350, width: 100, height: 50 },
+      ];
+
+      const quads = quadParams.map((params) =>
+        createQuadInstance(
+          gpu,
+          pipeline,
+          buildUniformData(params, canvasWidth, canvasHeight),
+        ),
       );
 
-      const pipeline = createQuadPipeline(gpu, uniformData);
-
       const loop = () => {
-        gpu.device.queue.writeBuffer(
-          pipeline.uniformBuffer,
-          0,
-          buildUniformData(
-            { x, y: 200, width: 100, height: 50 },
-            canvasWidth,
-            canvasHeight,
-          ),
-        );
-        renderQuad(gpu, pipeline);
-        x++;
+        quads.forEach((quad, i) => {
+          gpu.device.queue.writeBuffer(
+            quad.uniformBuffer,
+            0,
+            buildUniformData(quadParams[i], canvasWidth, canvasHeight),
+          );
+        });
+        renderQuad(gpu, pipeline, quads);
+        quadParams.forEach((p, i) => {
+          p.x++;
+          if (p.x > canvasWidth + 20) {
+            p.x = -100;
+          }
+        });
 
-        if (x > canvasWidth + 20) {
-          x = -100;
-        }
         frameId = requestAnimationFrame(loop);
       };
 

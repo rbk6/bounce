@@ -1,10 +1,13 @@
 import type { GPUContext } from './context';
 import shaderCode from './shaders/quad.wgsl?raw';
 
-export interface QuadResources {
+export interface QuadPipeline {
   pipeline: GPURenderPipeline;
   vertexBuffer: GPUBuffer;
   indexBuffer: GPUBuffer;
+}
+
+export interface QuadInstance {
   uniformBuffer: GPUBuffer;
   bindGroup: GPUBindGroup;
 }
@@ -52,10 +55,7 @@ export const buildUniformData = (
   return data;
 };
 
-export const createQuadPipeline = (
-  gpu: GPUContext,
-  uniformData: Float32Array<ArrayBuffer>,
-): QuadResources => {
+export const createQuadPipeline = (gpu: GPUContext): QuadPipeline => {
   const { device, format } = gpu;
 
   const vertices = new Float32Array([
@@ -73,11 +73,6 @@ export const createQuadPipeline = (
     indices,
     GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST,
   );
-  const uniformBuffer = device.createBuffer({
-    size: 80,
-    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
-  });
-  device.queue.writeBuffer(uniformBuffer, 0, uniformData);
 
   const module = device.createShaderModule({
     code: shaderCode,
@@ -109,8 +104,24 @@ export const createQuadPipeline = (
     primitive: { topology: 'triangle-list' },
   });
 
+  return { pipeline, vertexBuffer, indexBuffer };
+};
+
+export const createQuadInstance = (
+  gpu: GPUContext,
+  quadPipeline: QuadPipeline,
+  uniformData: Float32Array<ArrayBuffer>,
+): QuadInstance => {
+  const { device } = gpu;
+
+  const uniformBuffer = device.createBuffer({
+    size: 80,
+    usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+  });
+  device.queue.writeBuffer(uniformBuffer, 0, uniformData);
+
   const bindGroup = device.createBindGroup({
-    layout: pipeline.getBindGroupLayout(0),
+    layout: quadPipeline.pipeline.getBindGroupLayout(0),
     entries: [
       {
         binding: 0,
@@ -119,10 +130,14 @@ export const createQuadPipeline = (
     ],
   });
 
-  return { pipeline, vertexBuffer, indexBuffer, uniformBuffer, bindGroup };
+  return { uniformBuffer, bindGroup };
 };
 
-export const renderQuad = (gpu: GPUContext, resources: QuadResources) => {
+export const renderQuad = (
+  gpu: GPUContext,
+  quadPipeline: QuadPipeline,
+  quads: QuadInstance[],
+) => {
   const { device, context } = gpu;
 
   const encoder = device.createCommandEncoder();
@@ -137,11 +152,15 @@ export const renderQuad = (gpu: GPUContext, resources: QuadResources) => {
     ],
   });
 
-  pass.setPipeline(resources.pipeline);
-  pass.setVertexBuffer(0, resources.vertexBuffer);
-  pass.setIndexBuffer(resources.indexBuffer, 'uint16');
-  pass.setBindGroup(0, resources.bindGroup);
-  pass.drawIndexed(6);
+  pass.setPipeline(quadPipeline.pipeline);
+  pass.setVertexBuffer(0, quadPipeline.vertexBuffer);
+  pass.setIndexBuffer(quadPipeline.indexBuffer, 'uint16');
+
+  quads.forEach((quad) => {
+    pass.setBindGroup(0, quad.bindGroup);
+    pass.drawIndexed(6);
+  });
+
   pass.end();
   device.queue.submit([encoder.finish()]);
 };
