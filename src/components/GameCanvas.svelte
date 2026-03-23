@@ -4,6 +4,7 @@
   import { createQuadPipeline } from '$lib/gpu/quad';
   import { startLoop, stopLoop } from '$lib/game/loop';
   import { CANVAS_HEIGHT, CANVAS_WIDTH } from '$lib/game/config';
+  import { destroyBinds, initBinds } from '$lib/game/binds';
 
   let canvas!: HTMLCanvasElement;
 
@@ -12,11 +13,15 @@
       const gpu: GPUContext | null = await initGPU(canvas);
       if (!gpu) return; // TODO: error state for unsupported browsers
       const pipeline = createQuadPipeline(gpu);
+      initBinds();
       startLoop(gpu, pipeline);
     };
 
     init();
-    return () => stopLoop();
+    return () => {
+      stopLoop();
+      destroyBinds();
+    };
   });
 </script>
 

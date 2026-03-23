@@ -4,6 +4,11 @@ export interface Player {
   ready: boolean;
   currentTile: number;
   tileGroup: 0 | 1;
+  motion?: {
+    destinationTile: number;
+    progress: number;
+    bufferedDirection?: 'Left' | 'Right';
+  };
 }
 
 export interface Ball {
@@ -22,13 +27,13 @@ export interface State {
 export const initialState: State = {
   players: [0, 1].map((tileGroup) => ({
     id: crypto.randomUUID(),
-    speed: 1,
+    speed: 5,
     ready: false,
     currentTile: tileGroup,
     tileGroup: tileGroup as 0 | 1,
   })),
   balls: [],
-  ballSpeed: 0.01, // progress per frame
+  ballSpeed: 0.01, // progress per second
 };
 
 export let state: State = { ...initialState };

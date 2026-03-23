@@ -14,3 +14,5 @@ export const TILE_B_COLOR: [number, number, number, number] = [
 export const PLAYER_B_COLOR: [number, number, number, number] = [
   0.7, 0.3, 0.0, 1.0,
 ];
+
+export const BUFFER_THRESHOLD = 0.8;

@@ -7,18 +7,19 @@ import {
 } from '$lib/gpu/quad';
 import { CANVAS_WIDTH, TILE_A_COLOR, TILE_B_COLOR } from './config';
 
-export const TILE_COUNT = 10;
-export const TILE_WIDTH = 90;
-export const TILE_HEIGHT = 24;
-export const TILE_PADDING = 60;
-export const TILE_SPACING = Math.floor(
-  (CANVAS_WIDTH - TILE_PADDING * 2) / TILE_COUNT,
-);
-export const START_X = TILE_PADDING + TILE_SPACING / 2;
-export const PLAYER_Y = 420;
-export const TILE_Y = 510;
+const TILE_COUNT = 10;
+const TILE_WIDTH = 90;
+const TILE_HEIGHT = 24;
+const TILE_PADDING = 60;
+const TILE_SPACING = Math.floor((CANVAS_WIDTH - TILE_PADDING * 2) / TILE_COUNT);
+const START_X = TILE_PADDING + TILE_SPACING / 2;
+const TILE_Y = 510;
 
 export const tileX = (index: number) => START_X + index * TILE_SPACING;
+
+export const isValidTile = (index: number) => {
+  return index >= 0 && index <= TILE_COUNT - 1;
+};
 
 export const createTileInstances = (
   gpu: GPUContext,

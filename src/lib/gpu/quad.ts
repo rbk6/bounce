@@ -21,7 +21,7 @@ export interface QuadParams {
   color?: [number, number, number, number];
 }
 
-export const setupBuffer = (
+const setupBuffer = (
   device: GPUDevice,
   values: Float32Array | Uint16Array,
   usage: number,
@@ -31,9 +31,11 @@ export const setupBuffer = (
     usage,
     mappedAtCreation: true,
   });
-  values.constructor === Float32Array
-    ? new Float32Array(buffer.getMappedRange()).set(values)
-    : new Uint16Array(buffer.getMappedRange()).set(values);
+  if (values.constructor === Float32Array) {
+    new Float32Array(buffer.getMappedRange()).set(values as Float32Array);
+  } else {
+    new Uint16Array(buffer.getMappedRange()).set(values as Uint16Array);
+  }
   buffer.unmap();
   return buffer;
 };
